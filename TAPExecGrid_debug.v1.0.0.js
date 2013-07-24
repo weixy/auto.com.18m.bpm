@@ -69,6 +69,22 @@ var _renderYesOrNo = function (data) {
 	return tag;
 };
 
+var _calculateDuration = function (data) {
+	var dur = Math.round((data.lastUpdateTime.getTime() - data.startTime.getTime())/1000);
+	var days = Math.floor(dur/(24*60*60));
+    var hours = Math.floor((dur%(24*60*60))/(60*60));
+    var mins = Math.floor((dur%(60*60))/(60));
+    var secs = Math.floor(dur%(60));
+	var duration = (days!=0? days + " days " : "") + 
+                   (hours!=0? hours + " hours " : "") + 
+                   (mins!=0? mins + " mins " : "") + 
+                   (secs!=0? secs + " secs" : "");
+	if (duration == "") {
+		duration = " < 1 mins";
+	}
+	return duration;
+};
+
 
 
 define ([
@@ -131,7 +147,7 @@ define ([
 			{'name': 'Environments', 'field': 'environments', 'width': '250px'},
 			{'name': 'Tags', 'field': 'tags', 'width': '200px', 'formatter': _renderTags},
 			{'name': 'Start time', 'field': 'startTime', 'width': '180px', 'formatter': _renderDateTime},
-			{'name': 'Duration', 'field': 'Duration', 'width': '100px'}
+			{'name': 'Duration', 'field': '_item', 'width': '100px', 'formatter': _calculateDuration}
 		],
 		
 		layoutERDetails: [
@@ -264,7 +280,8 @@ define ([
 						pagination: true,
 						indirectSelection: true,
 						filter: true						
-					},
+					}/*,
+					
 					_renderStatus: function (data) {
 						var tag = "";
 						if (data=="COMPLETED" || data=="SUCCESSFUL"){
@@ -322,7 +339,7 @@ define ([
 							tag += "<label style='border-radius:5px;background:#8692B8;padding-left:8px;padding-right:8px;color:white;text-align:center;'>No</label>";
 						}
 						return tag;
-					}
+					}*/
 				}, "tapGrid");
 				//dojo.byId("tapGrid").appendChild(this.grid.domNode);
 				this.grid.startup();
